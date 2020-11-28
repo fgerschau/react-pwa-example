@@ -3,6 +3,7 @@ const path = require("path");
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -78,7 +79,9 @@ module.exports = (env, argv) => {
       }),
 
       new webpack.HotModuleReplacementPlugin(),
-      ...(isProduction ? [] : [
+      ...(isProduction ? [
+        new GenerateSW(),
+      ] : [
         new ForkTsCheckerWebpackPlugin({
           tsconfig: path.resolve(__dirname, './src/tsconfig.json'),
         }),
